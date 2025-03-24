@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Results</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container result-container">
+        <h1>Your Mental Health Assessment Results</h1>
+        <div class="result-content">
+            <div class="score-display">
+                <div class="score-number" id="scoreNumber"></div>
+                <div class="score-meter">
+                    <div class="meter-bar" id="meterBar"></div>
+                </div>
+                <div class="score-labels">
+                    <span>1 (Poor)</span>
+                    <span>10 (Excellent)</span>
+                </div>
+            </div>
+            <div class="result-text" id="resultText"></div>
+            <div class="recommendations" id="recommendations"></div>
+            <button class="retake-btn" onclick="window.location.href='index.html'">Take Test Again</button>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

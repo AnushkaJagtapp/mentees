@@ -1,4 +1,4 @@
-/* Base Styles */
+/* ===== BASE RESET & GLOBAL STYLES ===== */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -13,73 +13,195 @@ body {
   align-items: center;
   min-height: 100vh;
   padding: 20px;
+  line-height: 1.6;
+  color: #333;
 }
 
+/* ===== MAIN CONTAINER STYLES ===== */
 .container {
   background-color: white;
   border-radius: 15px;
   box-shadow: 0 5px 15px rgba(0,0,0,0.1);
   padding: 30px;
-  width: 90%;
+  width: 100%;
   max-width: 800px;
+  margin: 20px auto;
+  position: relative;
 }
 
-/* Intro Page */
-.intro-container {
-  text-align: center;
-  padding: 40px;
+/* ===== AUTHENTICATION BUTTONS (Index Page) ===== */
+.auth-buttons {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  gap: 10px;
+  z-index: 10;
 }
 
-.intro-container h1 {
-  color: #5D8736;
-  margin-bottom: 20px;
+#loginBtn, #signupBtn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-size: 16px;
 }
 
-.intro-container p {
+#loginBtn {
+  background-color: #f1c40f; /* Yellow */
   color: #333;
-  margin-bottom: 30px;
-  font-size: 18px;
 }
 
+#signupBtn {
+  background-color: #e74c3c; /* Red */
+  color: white;
+}
+
+#loginBtn:hover {
+  background-color: #f39c12;
+}
+
+#signupBtn:hover {
+  background-color: #c0392b;
+}
+
+/* ===== AUTH PAGE (Login/Signup) - UPDATED STYLES ===== */
+.auth-container {
+  max-width: 400px;
+  width: 100%;
+  padding: 40px;
+  text-align: center;
+  background-color: white;
+  border-radius: 15px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  margin: 0 auto;
+}
+
+.auth-container h2 {
+  color: #5D8736;
+  margin-bottom: 30px;
+  font-size: 24px;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+  border: 1px solid rgba(0,0,0,0.05);
+  margin: 20px 0;
+}
+
+.auth-form input {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.auth-submit {
+  background-color: #5D8736;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  width: 100%;
+  max-width: 200px;
+  margin: 0 auto;
+}
+
+.auth-submit:hover {
+  background-color: #4a6d2b;
+}
+
+.auth-toggle {
+  margin-top: 20px;
+  color: #666;
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+  border: 1px solid rgba(0,0,0,0.05);
+}
+
+.auth-toggle a {
+  color: #5D8736;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+/* ===== DESKTOP STYLES FOR AUTH PAGE ===== */
+@media (min-width: 768px) {
+  .auth-container {
+      padding: 50px;
+  }
+  
+  .auth-form {
+      padding: 40px;
+  }
+}
+
+/* ===== ALL OTHER PAGE STYLES REMAIN UNCHANGED BELOW ===== */
+/* ===== START BUTTON ===== */
 .start-button {
   background-color: #5D8736;
   color: white;
   border: none;
-  padding: 15px 30px;
-  font-size: 18px;
+  padding: 18px 45px;
+  font-size: 22px;
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.3s;
+  margin-top: 30px;
+  font-weight: 600;
+  display: inline-block;
 }
 
 .start-button:hover {
   background-color: #4a6d2b;
-  transform: translateY(-2px);
+  transform: scale(1.05);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
 }
 
-/* Questions Page */
+/* ===== QUESTION PAGE STYLES ===== */
 .question-container {
-  min-height: 500px;
-  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 60vh;
 }
 
 .progress-bar {
   height: 10px;
   background-color: #e0e0e0;
   border-radius: 5px;
-  margin-bottom: 30px;
+  margin-bottom: 25px;
   overflow: hidden;
+  width: 100%;
 }
 
 .progress {
   height: 100%;
   background-color: #5D8736;
   width: 0%;
-  transition: width 0.3s;
+  transition: width 0.3s ease;
 }
 
 #question-display {
-  margin: 20% 7% 25% 7%;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 0;
 }
 
 .question-text {
@@ -87,19 +209,19 @@ body {
   font-weight: 600;
   margin-bottom: 30px;
   color: #333;
+  text-align: center;
 }
 
+/* Answer Buttons */
 .answer-buttons {
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin: 20px 0;
 }
 
 .answer-btn {
-  flex: 1;
-  min-width: 120px;
-  padding: 12px;
+  padding: 14px;
   border: none;
   border-radius: 8px;
   background-color: #A9C46C;
@@ -107,6 +229,8 @@ body {
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s;
+  text-align: center;
+  font-size: 16px;
 }
 
 .answer-btn:hover {
@@ -119,19 +243,22 @@ body {
   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
+/* Navigation Buttons */
 .nav-buttons {
   display: flex;
-  justify-content: space-between;
-  margin-top: 30px;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 20px;
 }
 
 .nav-buttons button {
-  padding: 12px 25px;
+  padding: 14px;
   border: none;
   border-radius: 8px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s;
+  font-size: 16px;
 }
 
 #prevBtn {
@@ -152,24 +279,13 @@ body {
   background-color: #4a6d2b;
 }
 
-/* Results Page */
+/* ===== RESULT PAGE STYLES ===== */
 .result-container {
-  padding: 40px;
-  text-align: center;
-}
-
-.result-content {
-  margin-top: 30px;
+  padding: 30px;
 }
 
 .score-display {
-  margin-bottom: 40px;
-}
-
-.score-number {
-  font-size: 48px;
-  font-weight: 700;
-  margin-bottom: 20px;
+  margin: 30px 0;
 }
 
 .score-meter {
@@ -183,19 +299,17 @@ body {
 .meter-bar {
   height: 100%;
   border-radius: 15px;
-  width: 50%;
-  transition: width 1s, background-color 1s;
+  transition: width 1s ease, background-color 1s ease;
 }
 
-.score-labels {
-  display: flex;
-  justify-content: space-between;
-  color: #666;
-  font-size: 14px;
+.score-number {
+  font-size: 48px;
+  font-weight: 700;
+  margin: 10px 0;
 }
 
 .result-text {
-  font-size: 22px;
+  font-size: 24px;
   font-weight: 600;
   padding: 15px;
   border-radius: 10px;
@@ -223,70 +337,95 @@ body {
   margin-bottom: 10px;
 }
 
+/* Result Action Buttons */
+.result-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 30px;
+}
+
+.retake-btn, .create-account-btn {
+  padding: 16px;
+  border: none;
+  border-radius: 8px;
+  font-size: 18px;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-weight: 600;
+  text-align: center;
+}
+
 .retake-btn {
   background-color: #5D8736;
   color: white;
-  border: none;
-  padding: 15px 30px;
-  font-size: 18px;
-  border-radius: 8px;
-  cursor: pointer;
-  margin-top: 20px;
-  transition: all 0.3s;
+}
+
+.create-account-btn {
+  background-color: #f1c40f;
+  color: #333;
 }
 
 .retake-btn:hover {
   background-color: #4a6d2b;
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-  .container {
-      width: 95%;
-      padding: 20px;
-  }
-  
-  #question-display {
-      margin: 15% 5% 20% 5%;
-  }
-  
+.create-account-btn:hover {
+  background-color: #f39c12;
+}
+
+/* Emergency Resources */
+.emergency-resources {
+  background: #FFECEC;
+  padding: 20px;
+  margin: 30px 0;
+  border-left: 4px solid #e74c3c;
+  text-align: left;
+  border-radius: 0 8px 8px 0;
+}
+
+.emergency-resources h3 {
+  color: #e74c3c;
+  margin-bottom: 15px;
+}
+
+.emergency-resources ul {
+  padding-left: 20px;
+}
+
+/* ===== DESKTOP STYLES ===== */
+@media (min-width: 768px) {
+  /* Answer Buttons - Horizontal on desktop */
   .answer-buttons {
-      flex-direction: column;
+      grid-template-columns: repeat(2, 1fr);
   }
   
-  .answer-btn {
-      width: 100%;
-      margin-bottom: 10px;
+  /* Navigation Buttons */
+  .nav-buttons {
+      flex-direction: row;
+      justify-content: space-between;
   }
   
-  .question-text {
-      font-size: 18px;
+  .nav-buttons button {
+      max-width: 200px;
   }
-}
-/* Answer buttons layout */
-.answer-buttons {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  justify-content: space-between;
+  
+  /* Result Actions */
+  .result-actions {
+      flex-direction: row;
+      justify-content: center;
+  }
+  
+  .retake-btn, .create-account-btn {
+      max-width: 250px;
+  }
 }
 
-.answer-btn {
-  flex: 1 0 calc(20% - 10px); /* 5 buttons per row with gap */
-  min-width: 120px;
-  padding: 12px;
-  border: none;
-  border-radius: 8px;
-  background-color: #A9C46C;
-  color: #333;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s;
+/* ===== UTILITY CLASSES ===== */
+.hidden {
+  display: none !important;
+}
+
+.text-center {
   text-align: center;
-}
-
-@media (max-width: 768px) {
-  .answer-btn {
-      flex: 1 0 100%; /* Stack vertically on small screens */
-  }
 }

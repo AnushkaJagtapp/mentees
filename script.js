@@ -1,4 +1,4 @@
-// Global variables
+// ===== GLOBAL VARIABLES =====
 let currentQuestion = 0;
 const answers = [];
 const questions = [
@@ -19,67 +19,105 @@ const questions = [
     "I feel like I have a purpose in life."
 ];
 
-// Navigation functions
-function startTest() {
-    window.location.href = "questions.html";
+// ===== DOM CONTENT LOADED =====
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize the appropriate page
+    if (window.location.pathname.endsWith("questions.html")) {
+        loadQuestion();
+        setupEventListeners();
+    } 
+    else if (window.location.pathname.endsWith("result.html")) {
+        showResults();
+    }
+    else if (window.location.pathname.endsWith("index.html")) {
+        setupAuthButtons();
+    }
+});
+
+// ===== AUTHENTICATION HANDLERS =====
+function setupAuthButtons() {
+    const loginBtn = document.getElementById('loginBtn');
+    const signupBtn = document.getElementById('signupBtn');
+    
+    if (loginBtn && signupBtn) {
+        loginBtn.addEventListener('click', () => {
+            window.location.href = "auth.html?mode=login";
+        });
+        
+        signupBtn.addEventListener('click', () => {
+            window.location.href = "auth.html?mode=signup";
+        });
+    }
 }
 
+// ===== QUESTION PAGE FUNCTIONS =====
 function loadQuestion() {
-    const questionDisplay = document.getElementById("question-display");
-    const progress = document.getElementById("progress");
+    const questionDisplay = document.getElementById('question-display');
+    const progressBar = document.querySelector('.progress');
     
     // Update progress bar
-    progress.style.width = `${(currentQuestion / questions.length) * 100}%`;
+    const progressPercent = (currentQuestion / questions.length) * 100;
+    progressBar.style.width = `${progressPercent}%`;
     
-    // Create question HTML with properly structured buttons
+    // Display current question
     questionDisplay.innerHTML = `
-        <div class="question-text">Question ${currentQuestion + 1} of ${questions.length}: ${questions[currentQuestion]}</div>
-        <div class="answer-buttons-container">
-            <div class="answer-buttons">
-                <button class="answer-btn" data-value="1">Strongly Disagree</button>
-                <button class="answer-btn" data-value="2">Disagree</button>
-                <button class="answer-btn" data-value="3">No Opinion</button>
-                <button class="answer-btn" data-value="4">Agree</button>
-                <button class="answer-btn" data-value="5">Strongly Agree</button>
-            </div>
+        <p class="question-text">Question ${currentQuestion + 1} of ${questions.length}: ${questions[currentQuestion]}</p>
+        <div class="answer-buttons">
+            <button class="answer-btn" data-value="1">Strongly Disagree</button>
+            <button class="answer-btn" data-value="2">Disagree</button>
+            <button class="answer-btn" data-value="3">Neutral</button>
+            <button class="answer-btn" data-value="4">Agree</button>
+            <button class="answer-btn" data-value="5">Strongly Agree</button>
         </div>
     `;
     
-    // Add event listeners to buttons
-    document.querySelectorAll('.answer-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-            selectAnswer(parseInt(this.dataset.value));
-        });
-        
-        // Highlight if already selected
-        if (answers[currentQuestion] === parseInt(btn.dataset.value)) {
-            btn.classList.add('selected');
+    // Highlight selected answer if exists
+    if (answers[currentQuestion] !== undefined) {
+        highlightSelectedAnswer(answers[currentQuestion]);
+    }
+    
+    // Update navigation buttons
+    updateNavButtons();
+}
+
+function setupEventListeners() {
+    // Delegate events for answer buttons
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('answer-btn')) {
+            const selectedValue = parseInt(e.target.getAttribute('data-value'));
+            selectAnswer(selectedValue);
         }
     });
     
-    // Update navigation buttons
-    const prevBtn = document.getElementById("prevBtn");
-    const nextBtn = document.getElementById("nextBtn");
-    
-    prevBtn.style.visibility = currentQuestion === 0 ? 'hidden' : 'visible';
-    nextBtn.textContent = currentQuestion === questions.length - 1 ? 'Submit' : 'Next';
-    
-    // Add event listeners to nav buttons
-    prevBtn.onclick = prevQuestion;
-    nextBtn.onclick = nextQuestion;
+    // Navigation buttons
+    document.getElementById('prevBtn').addEventListener('click', prevQuestion);
+    document.getElementById('nextBtn').addEventListener('click', nextQuestion);
 }
 
 function selectAnswer(value) {
     answers[currentQuestion] = value;
-    
-    // Update button styles
-    const buttons = document.querySelectorAll('.answer-btn');
-    buttons.forEach(btn => {
+    highlightSelectedAnswer(value);
+}
+
+function highlightSelectedAnswer(value) {
+    // Remove all selections first
+    document.querySelectorAll('.answer-btn').forEach(btn => {
         btn.classList.remove('selected');
-        if (parseInt(btn.dataset.value) === value) {
-            btn.classList.add('selected');
-        }
     });
+    
+    // Highlight the selected one
+    const selectedBtn = document.querySelector(`.answer-btn[data-value="${value}"]`);
+    if (selectedBtn) {
+        selectedBtn.classList.add('selected');
+    }
+}
+
+function updateNavButtons() {
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    
+    prevBtn.style.visibility = currentQuestion === 0 ? 'hidden' : 'visible';
+    nextBtn.textContent = currentQuestion === questions.length - 1 ? 'Submit' : 'Next';
 }
 
 function prevQuestion() {
@@ -91,7 +129,7 @@ function prevQuestion() {
 
 function nextQuestion() {
     if (answers[currentQuestion] === undefined) {
-        alert("You must answer the question first to proceed to the next one.");
+        alert("Please select an answer before continuing.");
         return;
     }
     
@@ -103,92 +141,120 @@ function nextQuestion() {
     }
 }
 
+// ===== RESULT CALCULATION =====
 function calculateResults() {
-    // Reverse score for negative questions (2,3,5,7,9,11,13)
-    const reversedQuestions = [1, 2, 4, 6, 8, 10, 12]; // zero-based index
+    // Reverse score for negative questions (questions 2,3,5,7,9,11,13 - zero-indexed)
+    const reversedIndices = [1, 2, 4, 6, 8, 10, 12];
     const processedAnswers = answers.map((answer, index) => {
-        return reversedQuestions.includes(index) ? 6 - answer : answer;
+        return reversedIndices.includes(index) ? 6 - answer : answer;
     });
     
     const totalScore = processedAnswers.reduce((sum, value) => sum + value, 0);
-    const maxScore = questions.length * 5;
-    const percentage = (totalScore / maxScore) * 100;
-    const scaledScore = Math.round((percentage / 10) * 10) / 10; // Score from 1-10
+    const maxPossibleScore = questions.length * 5;
+    const percentage = (totalScore / maxPossibleScore) * 100;
+    const scaledScore = Math.min(10, Math.max(1, Math.round((percentage / 10) * 10) / 10));
     
-    // Store results in localStorage to pass to result page
+    // Save results and redirect
     localStorage.setItem('mentalHealthScore', scaledScore);
+    localStorage.setItem('answers', JSON.stringify(answers));
     window.location.href = "result.html";
 }
 
+// ===== RESULT PAGE FUNCTIONS =====
 function showResults() {
     const score = parseFloat(localStorage.getItem('mentalHealthScore'));
-    const meterBar = document.getElementById("meterBar");
-    const scoreNumber = document.getElementById("scoreNumber");
-    const resultText = document.getElementById("resultText");
-    const recommendations = document.getElementById("recommendations");
+    const answers = JSON.parse(localStorage.getItem('answers')) || [];
     
-    // Calculate percentage for meter bar
+    if (isNaN(score)) {
+        window.location.href = "index.html";
+        return;
+    }
+    
+    updateScoreDisplay(score);
+    showRecommendations(score);
+    setupResultButtons();
+}
+
+function updateScoreDisplay(score) {
+    const meterBar = document.getElementById('meterBar');
+    const scoreNumber = document.getElementById('scoreNumber');
+    const resultText = document.getElementById('resultText');
+    
+    // Calculate percentage for display
     const percentage = (score / 10) * 100;
     meterBar.style.width = `${percentage}%`;
     
     // Set color based on score
-    let color, healthStatus;
+    let color, status;
     if (score >= 8) {
-        color = '#2ecc71'; // Green
-        healthStatus = "Excellent Mental Health";
+        color = '#2ecc71';
+        status = "Excellent Mental Health";
     } else if (score >= 6) {
-        color = '#f1c40f'; // Yellow
-        healthStatus = "Good Mental Health";
+        color = '#f1c40f';
+        status = "Good Mental Health";
     } else if (score >= 4) {
-        color = '#e67e22'; // Orange
-        healthStatus = "Moderate Mental Health";
+        color = '#e67e22';
+        status = "Moderate Mental Health";
     } else {
-        color = '#e74c3c'; // Red
-        healthStatus = "Poor Mental Health";
+        color = '#e74c3c';
+        status = "Needs Improvement";
     }
     
+    // Update display
     meterBar.style.backgroundColor = color;
-    scoreNumber.textContent = score;
+    scoreNumber.textContent = score.toFixed(1);
     scoreNumber.style.color = color;
-    resultText.textContent = healthStatus;
+    resultText.textContent = status;
     resultText.style.backgroundColor = `${color}20`;
-    
-    // Provide recommendations
+}
+
+function showRecommendations(score) {
+    const recommendations = document.getElementById('recommendations');
     let recommendationHTML = '<h3>Recommendations</h3><ul>';
     
     if (score >= 8) {
         recommendationHTML += `
             <li>Continue your healthy habits</li>
-            <li>Practice gratitude daily</li>
-            <li>Consider helping others with mental health</li>
+            <li>Practice gratitude journaling</li>
+            <li>Consider mentoring others</li>
         `;
     } else if (score >= 6) {
         recommendationHTML += `
-            <li>Practice mindfulness or meditation</li>
-            <li>Maintain regular sleep schedule</li>
-            <li>Connect with friends/family regularly</li>
+            <li>Try 10-minute daily meditation</li>
+            <li>Establish a sleep routine</li>
+            <li>Connect with friends weekly</li>
         `;
     } else if (score >= 4) {
         recommendationHTML += `
-            <li>Consider talking to a mental health professional</li>
-            <li>Establish a daily routine</li>
-            <li>Engage in regular physical activity</li>
+            <li>Consider talking to a professional</li>
+            <li>Start a simple exercise routine</li>
+            <li>Practice mindfulness daily</li>
         `;
     } else {
         recommendationHTML += `
-            <li>Seek professional help from a therapist</li>
-            <li>Reach out to trusted friends/family</li>
-            <li>Contact a mental health hotline if needed</li>
+            <li>Contact a mental health professional</li>
+            <li>Reach out to your support network</li>
+            <li>Prioritize self-care activities</li>
         `;
     }
     
-    recommendationHTML += '</ul>';
-    recommendations.innerHTML = recommendationHTML;
+    recommendations.innerHTML = recommendationHTML + '</ul>';
 }
 
-// Initialize appropriate page
-if (window.location.pathname.endsWith("questions.html")) {
-    document.addEventListener('DOMContentLoaded', loadQuestion);
-} else if (window.location.pathname.endsWith("result.html")) {
-    document.addEventListener('DOMContentLoaded', showResults);
+function setupResultButtons() {
+    document.querySelector('.retake-btn').addEventListener('click', () => {
+        window.location.href = "index.html";
+    });
+    
+    document.querySelector('.create-account-btn').addEventListener('click', () => {
+        window.location.href = "auth.html?mode=signup";
+    });
+}
+
+// ===== START TEST FUNCTION =====
+function startTest() {
+    // Reset previous answers
+    localStorage.removeItem('answers');
+    localStorage.removeItem('mentalHealthScore');
+    window.location.href = "questions.html";
 }

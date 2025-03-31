@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Results</title>
+    <title>Your Mental Health Results</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -21,8 +21,22 @@
                 </div>
             </div>
             <div class="result-text" id="resultText"></div>
+            <div class="result-phrase" id="resultPhrase"></div>
             <div class="recommendations" id="recommendations"></div>
-            <button class="retake-btn" onclick="window.location.href='index.html'">Take Test Again</button>
+            
+            <div class="emergency-resources">
+                <h3>Immediate Help Resources</h3>
+                <ul>
+                    <li><a href="tel:123-456-7890">Crisis Hotline: 123-456-7890</a></li>
+                    <li><a href="#">Find a Therapist Near You</a></li>
+                    <li><a href="#">24/7 Online Chat Support</a></li>
+                </ul>
+            </div>
+            
+            <div class="result-actions">
+                <button class="retake-btn" onclick="window.location.href='index.html'">Take Test Again</button>
+                <button class="create-account-btn" onclick="window.location.href='auth.html?mode=signup'">Create Account</button>
+            </div>
         </div>
     </div>
     <script src="script.js"></script>
